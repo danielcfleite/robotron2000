@@ -112,8 +112,12 @@ const parts = {
 const controle = document.querySelectorAll("[data-controle]");
 controle.forEach((element) => {
   element.addEventListener("click", (event) => {
+    atualizaStats(
+      event.target.dataset.part,
+      event.target.dataset.controle,
+      event.target.parentNode
+    );
     manipulaDados(event.target.dataset.controle, event.target.parentNode);
-    atualizaStats(event.target.dataset.part, event.target.dataset.controle);
   });
 });
 
@@ -121,17 +125,21 @@ function manipulaDados(content, controll) {
   const peca = controll.querySelector("[data-contador]");
   if (content === "+") {
     peca.value = parseInt(peca.value) + 1;
-  } else if (content === "-") {
+  } else if (content === "-" && parseInt(peca.value) === 0) {
+    alert("Essa peça já está no mínimo");
+  } else if (content === "-" && parseInt(peca.value) != 0) {
     peca.value = parseInt(peca.value) - 1;
   }
 }
 
-function atualizaStats(part, content) {
+function atualizaStats(part, content, controll) {
+  const peca = controll.querySelector("[data-contador]");
   stats.forEach((element) => {
     if (content === "+") {
       element.textContent =
         parseInt(element.textContent) + parts[part][element.dataset.stat];
-    } else if (content === "-") {
+    } else if (content === "-" && parseInt(peca.value) === 0) {
+    } else {
       element.textContent =
         parseInt(element.textContent) - parts[part][element.dataset.stat];
     }
